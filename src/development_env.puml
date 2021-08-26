@@ -1,0 +1,27 @@
+@startuml "Development Environment Context"
+!include https://raw.githubusercontent.com/adrianvlupu/C4-PlantUML/latest/C4_Context.puml
+title "\n**Dev Env Context**\n"
+LAYOUT_WITH_LEGEND()
+
+Boundary(me, "Morningg's Local Environment"){
+    Person(mnggs, "Morninggs Dev", "Main developer")
+    System(pc, "Windows PC", "Main development machine"){
+      System(vs, "VS Code", "IDE"){
+          System(sbr, "Sidebar", "File browser, extensions etc..")
+          System(edt, "Text editor", "Place to edit code")
+          System(trmnl, "Tools", "Terminal, debug, output etc...")
+      }
+      System(dkr, "Docker", "Virtual container environment"){
+          System(lnxc, "Linux Containers"){
+              System(app, "The application", "Made up of one or multiple containers")
+          }
+      }
+      System(git, "Git", "Version control system")
+    }
+}
+System_Ext(gith, "GitHub", "Online repository for version control and software sharing")
+Person_Ext(mf, "Morninggs Friend", "Friend supplying server")
+Rel(git, gith, "push/pull")
+Rel(mnggs, pc, "develops software")
+Rel(mf, gith, "pulls/deploys")
+@enduml

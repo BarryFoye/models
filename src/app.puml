@@ -1,0 +1,40 @@
+@startuml "App Context"
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+title "\n**Application Context**\n"
+LAYOUT_WITH_LEGEND()
+
+Boundary(dkr, "Docker", "Virtual container environment"){
+    Boundary(app, "The application", "Made up of one or multiple containers"){
+        Container(srv, "Web Server", "NGINX", "Serves content"){
+            Component(web, "Web Site", "HTML, CSS, JS", "This will contain the content that is served to a browser", "")
+        }
+        Boundary(sbt, "Backend app", "Various Tech"){
+            Container(gtwy, "Gateway Server", "NGINX", "A server to handle API requests to the backend")
+            Boundary(lgic, "Logic Layer"){
+                Component(trsact, "Transaction manager", "Spring-boot", "Example: you may have some logic for handling transactions")
+                Component(rcrdsv1, "Records System V1", "PHP", "Version 1 PHP emailer")
+                Component(accnano, "Accept Nano", "Go", "Accept Nano server for payments management")
+            }
+            Boundary(data, "Data Layer"){
+                Component(rcrdsv2, "Records System V2", "Spring-boot", "Version 2 Data storage")
+                Component(sql, "Relational Database", "MySQL", "An advanced database to handle data recording")
+                Component(csv, "CSV File", ".csv", "Basic way to store data")
+            }
+        }
+    }
+}
+System_Ext(usrbrsr, "Some browser", "Firefox")
+System_Ext(mail, "Morningg's Email server", "Google/Office etc...")
+System_Ext(wllt, "Morningg's Wallet", "Nault, Natrium etc...")
+
+Rel(rcrdsv1, mail, "transaction record")
+Rel(trsact, rcrdsv2, "transaction data")
+Rel(trsact, accnano, "transaction data")
+Rel(accnano, wllt, "payment data")
+Rel(gtwy, trsact, "forward requests")
+Rel(usrbrsr, gtwy, "requests")
+Rel(web, usrbrsr, "content")
+Rel(rcrdsv2, sql, "transaction record")
+Rel(rcrdsv2, csv, "transaction record")
+Rel(web, rcrdsv1, "transaction record")
+@enduml

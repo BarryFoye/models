@@ -1,0 +1,28 @@
+@startuml "Network Context"
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+title "\n**Network Context**\n"
+LAYOUT_WITH_LEGEND()
+Boundary(pc, "Networked PC", "https://nanozen.shop:443"){
+    Boundary(dkr, "Docker", "Virtual container environment"){    
+        Container(srv, "Web Server", "NGINX", "192.168.1.255:443"){
+            Component(web, "Web Site", "HTML, CSS, JS")
+        }        
+        Container(gtwy, "Gateway Server", "NGINX", "192.168.1.100:3000")
+        Component(trsact, "Transaction manager", "Spring-boot", "192.168.1.101:4000")
+        Component(rcrdsv1, "Records System V1", "PHP", "192.168.1.250:9000")
+        Component(accnano, "Accept Nano", "Go", "192.168.1.102:7075")
+        Component(rcrdsv2, "Records System V2", "Spring-boot", "192.168.1.103:5000")
+        Component(sql, "Relational Database", "MySQL", "192.168.1.104:3306")
+        Component(csv, "CSV File", ".csv", "/var/lib/nanozen")        
+    }
+}
+Rel(pc, dkr, "forwards requests")
+Rel(dkr, gtwy, "forwards requests")
+Rel(dkr, srv, "forwards requests")
+Rel(trsact, rcrdsv2, "transaction data")
+Rel(trsact, accnano, "transaction data")
+Rel(gtwy, trsact, "forward requests")
+Rel(rcrdsv2, sql, "transaction record")
+Rel(rcrdsv2, csv, "transaction record")
+Rel(dkr, rcrdsv1, "transaction record")
+@enduml
