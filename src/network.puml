@@ -2,6 +2,7 @@
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
 title "\n**Network Context**\n"
 LAYOUT_WITH_LEGEND()
+LAYOUT_LEFT_RIGHT()
 Boundary(pc, "Networked PC", "https://nanozen.shop:443"){
     Boundary(dkr, "Docker", "Virtual container environment"){    
         Container(srv, "Web Server", "NGINX", "192.168.1.255:443"){
